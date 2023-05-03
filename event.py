@@ -31,3 +31,6 @@ class Event(metaclass=ABCMeta):
         # Add input validation
         self.__date = date
 
+    @property
+    def id(self):
+        return self.__id
