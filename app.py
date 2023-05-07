@@ -13,6 +13,10 @@ def home(name=None):
 def name(name=None):
     return render_template('login.html', name=name)
 
+@app.route('/events')
+def name(name=None):
+    return render_template('events.html', name=name)
+
 @app.route('/preferences')
 def time(name=None):
     return render_template('preferences.html', name=name)
