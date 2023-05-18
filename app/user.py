@@ -1,11 +1,11 @@
 from user_preferences import UserPreferences
 
 class User:
-    def __init__(self, username, email, events={},
+    def __init__(self, username, email, events=[],
                  user_preferences=UserPreferences()):
-        self.__username = username
-        self.__email = email
-        self.__events = events
+        self.username = username
+        self.email = email
+        self.events = events
         # example events in self.__events
         # self.__events = {
         #   'MM-DD': [event1, event2, event3]
@@ -16,10 +16,16 @@ class User:
 
 
     def add_event(self, event):
-        self.__events[event.date].append(event)
+        # self.__events[event.date].append(event)
+        self.events.append(event)
 
     def remove_event(self, event):
         # input validation
-        for e in self.__events:
+        for e in self.events:
             if e.id == event.id:
-                self.__events.remove(e)
+                self.events.remove(e)
+
+    # @property
+    # def events():
+    #     return self.__events
+    

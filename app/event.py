@@ -3,7 +3,7 @@ from datetime import datetime
 import uuid
 
 
-class Event(metaclass=ABCMeta):
+class Event:  # was abstract class (make abstract if we create diff event types)
     def __init__(self, name, date):
         self.__name = name
         self.__date = date

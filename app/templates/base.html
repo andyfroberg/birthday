@@ -12,7 +12,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-5">
-        <a class="navbar-brand" href="#">Birthday Reminders</a>
+        <a class="navbar-brand" href="/">Birthday Reminders</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -20,123 +20,39 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Sign Up</a>
+              <a class="nav-link" href="/signup">Sign Up</a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="#">Log In</a>
+              <a class="nav-link" href="/login">Log In</a>
             </li>
           </ul>
         </div>
     </nav>
 
-
-    <div class="container-fluid pl-5 pr-5">
-        <h3>Your Birthdays and Special Events</h3>
-      
-        <table class="table table-striped">
-        <tr class="table-primary">
-            <td class="table-primary">Event Name</td>
-            <td class="table-primary">Event Date</td>
-            <td class="table-primary">Options</td>
-        </tr>
-        <tr>
-            <td>Mom</td>
-            <td>
-                <select class="form-select" id="validationCustom04" required>
-                <option selected disabled value="">Month</option>
-                <option>Jan</option>
-                <option>Feb</option>
-                <option>Mar</option>
-                <option>Apr</option>
-                <option>May</option>
-                <option>Jun</option>
-                <option>JKul</option>
-                <option>Aug</option>
-                <option>Sep</option>
-                <option>Oct</option>
-                <option>Nov</option>
-                <option>Dec</option>
-              </select>
-              <select class="form-select" id="validationCustom04" required>
-                <option selected disabled value="">Day</option>
-                <option>01</option>
-                <option>02</option>
-                <option>03</option>
-                <option>04</option>
-                <option>05</option>
-                <option>06</option>
-                <option>07</option>
-                <option>08</option>
-                <option>09</option>
-                <option>10</option>
-                <option>11</option>
-                <option>12</option>
-                <option>13</option>
-                <option>14</option>
-                <option>15</option>
-                <option>16</option>
-                <option>17</option>
-                <option>18</option>
-                <option>19</option>
-                <option>20</option>
-                <option>21</option>
-                <option>22</option>
-                <option>23</option>
-                <option>24</option>
-                <option>25</option>
-                <option>26</option>
-                <option>27</option>
-                <option>28</option>
-                <option>29</option>
-                <option>30</option>
-                <option>31</option>
-              </select>
-            </td>
-            <td>...</td>
-        </tr>
-        <tr>
-            <td>Dad</td>
-            <td>Aug 13</td>
-            <td>...</td>
-        </tr>
-        <tr>
-            <td>Sister</td>
-            <td>Aug 15</td>
-            <td>...</td>
-        </tr>
-        <tr>
-            <td>Jenny</td>
-            <td>Oct 31</td>
-            <td>...</td>
-        </tr>
-        <tr>
-            <td>James</td>
-            <td>Jan 5</td>
-            <td>...</td>
-        </tr>
-        </table>
+    <div id="content">
+      {% block content %}{% endblock %}
     </div>
 
-  <footer>
-    <div class="container-fluid bg-primary text-white p-5">
-        <div class="row align-items-center">
-            <div class="col">
-                <h4>Birthday Reminders</h4>
-            </div>
-            <div class="col">
-                <h6><a href="#" style="font-weight:600; color: white;">Log In</a></h6>
-                <h6></h6><a href="#" style="font-weight:600; color: white;">Sign Up</a></h6>
-            </div>
-            <div class="col">
-                <h6 style="font-weight:600;">Created by Team STAX</h6>
-                <h6>Sheehan Smith</h6>
-                <h6>Tom Swanson</h6>
-                <h6>Andrew Froberg</h6>
-                <h6>Xiying Long</h6>
-            </div>
-        </div>
-    </div>
-  </footer>
+    <footer>
+      <div class="container-fluid bg-primary text-white p-5">
+          <div class="row align-items-center">
+              <div class="col">
+                  <h4>Birthday Reminders</h4>
+              </div>
+              <div class="col">
+                  <h6><a href="/login" style="font-weight:600; color: white;">Log In</a></h6>
+                  <h6></h6><a href="/signup" style="font-weight:600; color: white;">Sign Up</a></h6>
+              </div>
+              <div class="col">
+                  <h6 style="font-weight:600;">Created by Team STAX</h6>
+                  <h6>Sheehan Smith</h6>
+                  <h6>Tom Swanson</h6>
+                  <h6>Andrew Froberg</h6>
+                  <h6>Xiying Long</h6>
+              </div>
+          </div>
+      </div>
+    </footer>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
