@@ -1,7 +1,0 @@
-flask
-SQLAlchemy
-flask-sqlalchemy
-flask-wtf
-email_validator
-requests
-flask-login
