@@ -2,10 +2,10 @@
 # Import the necessary modules
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import LoginForm, BirthdayForm
+from forms import LoginForm, NameAndDateForm, DescriptionForm
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, loginManager, UserModel
-from event import Event
+from event import NameAndDateEvent, DescriptionEvent
 
 # Create a new Flask application instance
 app = Flask(__name__)
@@ -122,14 +122,14 @@ def register():
 
 @app.route('/add_birthday', methods=["GET", "POST"])
 def add_birthday():
-    birthdayForm = BirthdayForm()
+    birthdayForm = NameAndDateForm()
     global my_events
     if birthdayForm.validate_on_submit():
         firstName = request.form['firstName']
         lastName = request.form['lastName']
-        birthDate = request.form['birthDate']
+        date = request.form['date']
         full_name = f"{firstName} {lastName}"
-        new_birthday = Event(full_name, birthDate)
+        new_birthday = NameAndDateEventEvent(full_name, date)
         my_events.append(new_birthday)
         # add birthday to database
         return redirect(url_for('reminders'))
