@@ -9,3 +9,4 @@ class LoginForm(FlaskForm):
 class BirthdayForm(FlaskForm):
     firstName = StringField('firstName', validators=[DataRequired(), Length(min=1, max=50)])
     lastName = StringField('lastName', validators=[DataRequired(), Length(min=1, max=50)])
+    birthDate = StringField('lastName', validators=[DataRequired(), Length(min=1, max=50)])

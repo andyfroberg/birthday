@@ -82,43 +82,32 @@
 
 </html>
 
-
-<form action="/add-birthday" method="post">{{birthdayForm.csrf_token}}</form>
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-60">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-        <div class="card bg-light text-dark" style="border-radius: 1rem;">
-          <div class="card-body p-5 text-center">
-
-            <div class="mb-md-5 mt-md-4">
-              <h3 class="fw-bold mb-4 text-uppercase">Add Birthday</h3>
+  <form method="post">
+    {{birthdayForm.csrf_token}}
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-60">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card bg-light text-dark" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+              <div class="mb-md-5 mt-md-4">
+                <h3 class="fw-bold mb-4 text-uppercase">Add Birthday</h3>
               
-              <div class="form-outline form-white mb-4">
-                {{ birthdayForm.firstName(class="form-inline", placeholder="First Name") }}
+                <div class="form-outline form-white mb-4">
+                  {{ birthdayForm.firstName(class="form-inline", placeholder="First Name") }}
+                </div>
+
+                <div class="form-outline form-white mb-4">
+                  {{ birthdayForm.lastName(class="form-inline", placeholder="Last Name") }}
+                </div>
               </div>
-
               <div class="form-outline form-white mb-4">
-                {{ birthdayForm.lastName(class="form-inline", placeholder="Last Name") }}
+                {{ birthdayForm.birthDate(class="form-inline", placeholder="Date") }}
+              </div>
+              <button type="Submit "class="btn btn-primary mb-2">Enter</button>
               </div>
             </div>
-
-            <div class="mb-3">
-              <p class="text-50 mb-2">BIRTHDAY</p>
-              <input
-                autocomplete="off"
-                class="form-control mx-auto w-auto"
-                id="birthDate"
-                name="birthDate"
-                type="date"
-              />
-
-            </div>
-              <button class="btn btn-success btn-lg px-5" href="{{url_for('reminders')}}" type="submit">ADD</button>
-            </div>
-
           </div>
         </div>
       </div>
     </div>
-  </div>
-</form>
+  </form>

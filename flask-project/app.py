@@ -124,12 +124,12 @@ def register():
 def add_birthday():
     birthdayForm = BirthdayForm()
     global my_events
-    if request.method == 'POST':
+    if birthdayForm.validate_on_submit():
         firstName = request.form['firstName']
-        lastName = request.form['lastName]
-        date = request.form['birthDate']
+        lastName = request.form['lastName']
+        birthDate = request.form['birthDate']
         full_name = f"{firstName} {lastName}"
-        new_birthday = Event(full_name, date)
+        new_birthday = Event(full_name, birthDate)
         my_events.append(new_birthday)
         # add birthday to database
         return redirect(url_for('reminders'))
