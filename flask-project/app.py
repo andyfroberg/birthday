@@ -125,15 +125,15 @@ def add_birthday():
     birthdayForm = NameAndDateForm()
     global my_events
     if birthdayForm.validate_on_submit():
+        # data collected from form to be added to db
         firstName = request.form['firstName']
         lastName = request.form['lastName']
         date = request.form['date']
         full_name = f"{firstName} {lastName}"
+        # mock event creation this will be done in get_events
         new_birthday = NameAndDateEvent(date, full_name)
         my_events.append(new_birthday)
-        # add birthday to database
         return redirect(url_for('reminders'))
-    # will have to get data entered by user and store into db
     return render_template('add_birthday.html', birthdayForm=birthdayForm)
 
 @app.route('/add_anniversary', methods=["GET", "POST"])
@@ -141,15 +141,15 @@ def add_anniversary():
     anniversaryForm = NameAndDateForm()
     global my_events
     if anniversaryForm.validate_on_submit():
+        # data collected from form to be added to db
         firstName = request.form['firstName']
         lastName = request.form['lastName']
         date = request.form['date']
         full_name = f"{firstName} {lastName}"
+        # mock event creation this will be done in get_events
         new_anniversary = NameAndDateEvent(date, full_name)
         my_events.append(new_anniversary)
-        # add anniversary to database
         return redirect(url_for('reminders'))
-    # will have to get data entered by user and store into db
     return render_template('add_birthday.html', anniversaryForm=anniversaryForm)
 
 @app.route('/add_other', methods=["GET", "POST"])
@@ -157,19 +157,20 @@ def add_other():
     descriptionForm = DescriptionForm()
     global my_events
     if descriptionForm.validate_on_submit():
+        # data collected from form to be added to db
         title = request.form['title']
         description = request.form['description']
         date = request.form['date']
+        # mock event creation this will be done in get_events
         new_description_event = DescriptionEvent(date, title, description)
         my_events.append(new_description_event)
-        # add other event to database
         return redirect(url_for('reminders'))
-    # will have to get data entered by user and store into db
     return render_template('add_birthday.html', descriptionForm=descriptionForm)
 
 def get_events():
-    # will grab event data from db and create Event class objects
-    # and return the list of them to be used in reminders to display events
+    # will grab event data from db and create Event class objects for each event
+    # return the list of them to be used in reminders to display events
+    # possible sorting: by date, name, add importance attr to event classes?
     pass
 
 @app.route('/reminders', methods=["GET", "POST"])
