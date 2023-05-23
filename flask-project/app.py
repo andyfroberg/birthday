@@ -21,6 +21,9 @@ db.init_app(app)
 #initialize the login manager
 loginManager.init_app(app)
 
+#testing event list
+my_events = []
+
 def addUser(email, password):
     user = UserModel()
     user.setPassword(password)
@@ -120,6 +123,16 @@ def register():
 @app.route('/add_birthday', methods=["GET", "POST"])
 def add_birthday():
     birthdayForm = BirthdayForm()
+    global my_events
+    if request.method == 'POST':
+        firstName = request.form['firstName']
+        lastName = request.form['lastName]
+        date = request.form['birthDate']
+        full_name = f"{firstName} {lastName}"
+        new_birthday = Event(full_name, date)
+        my_events.append(new_birthday)
+        # add birthday to database
+        return redirect(url_for('reminders'))
     # will have to get data entered by user and store into db
     return render_template('add_birthday.html', birthdayForm=birthdayForm)
 
@@ -130,8 +143,8 @@ def get_events():
 
 @app.route('/reminders', methods=["GET", "POST"])
 def reminders():
-    # This function will be called when someone accesses the root URL
-    return render_template('reminders.html', events=[Event("My birthday", "10/25"), Event("Wife's birthday", "03/31")])
+    global my_events
+    return render_template('reminders.html', events=my_events)
 
 # Run the application if this script is being run directly
 if __name__ == '__main__':
