@@ -8,15 +8,18 @@
           <div class="card bg-light text-dark" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
               <div class="mb-md-5 mt-md-4">
-                <h3 class="fw-bold mb-4 text-uppercase">Add Event</h3>
+                <h3 class="fw-bold mb-4 text-uppercase">Add Reminder</h3>
               
                 <div class="form-outline form-white mb-4">
                   {{ descriptionForm.title(class="form-inline", placeholder="Event Title") }}
                 </div>
-
-                <div class="form-outline form-white mb-4">
+				<div class="form-group">
+    				<textarea class="form-control" id="textarea" rows="3"></textarea>
+                    {{ descriptionForm.description(class="form-inline", placeholder="Event Description") }}
+  				</div>       
+                <!--div class="form-outline form-white mb-4">
                   {{ descriptionForm.description(class="form-inline", placeholder="Event Description") }}
-                </div>
+                </div-->
               </div>
               <div class="form-outline form-white mb-4">
                 {{ descriptionForm.date(class="form-inline", placeholder="Date") }}
