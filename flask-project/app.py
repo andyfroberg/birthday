@@ -2,7 +2,7 @@
 # Import the necessary modules
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import LoginForm, NameAndDateForm, DescriptionForm
+from forms import LoginForm, NameAndDateForm, DescriptionForm, RegisterForm
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, loginManager, UserModel
 from event import NameAndDateEvent, DescriptionEvent
@@ -44,26 +44,27 @@ def authHandler():
 @app.before_first_request
 def create_table():
     db.create_all()
-    user = UserModel.query.filter_by(email = 'lhhung@uw.edu' ).first()
+    user = UserModel.query.filter_by(email = 'xil1314@uw.edu' ).first()
     if user is None:
-        addUser("lhhung@uw.edu","qwerty")
+        addUser("xil1314@uw.edu","506506")
     else:
         logout_user()
 
-# Define a route for the root URL ("/") that returns "Hello World"
+
 @app.route('/home')
-def birthdayReminder():
+def home():
     # This function will be called when someone accesses the root URL
     return render_template('home.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route('/login', methods=["GET", "POST"])
 def login():
-    form=LoginForm()
+    form = LoginForm()
     if request.method == 'POST':
         if not form.validate_on_submit():
             flash('Please enter a valid email and password')
             return render_template('login.html',form=form)
-        user = UserModel.query.filter_by(email = form.email.data).first()
+        user = UserModel.query.filter_by(email=form.email.data ).first()
         if user is None:
             flash('Please enter a valid email')
             return render_template('login.html',form=form)
@@ -72,55 +73,40 @@ def login():
             return render_template('login.html',form=form)
         login_user(user)
         session['email'] = form.email.data
-        return redirect(url_for('reminder.html'))
-    # This function will be called when someone accesses the root URL
-    return render_template('login.html', form=form)
+        return redirect(url_for('reminders'))
+    return render_template("login.html", form=form)
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
-    form=LoginForm()
-    session.pop('username', None)
+    session.pop('email', None)
     # This function will be called when someone accesses the root URL
-    return render_template('login.html', form=form)
+    return redirect(url_for('home'))
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
-    if request.method == "POST":
-        # Create cursor
-        cursor = connection.cursor()
-        # Get the form data
-        username = request.form.get("username")
-        password = request.form.get("password")
-        password_confirmation = request.form.get("password_confirmation")
-        # Check if a username was entered
-        if not username:
-            return render_template("register.html", error_message="Missing username. ")
-        # Evaluate if the user does already exist
-        query = "SELECT * FROM users WHERE username = %s"
-        cursor.execute(query, (username,))
-        row = cursor.fetchone()
-        if row:
-            return render_template("register.html", error_message="Username already exists. ")
-        # Check if a password was entered
-        if not password:
-            return render_template("register.html", error_message="Missing password. ")
-        # Check if a password confirmation was entered
-        if not password_confirmation:
-            return render_template("register.html", error_message="Missing password confirmation. ")
-        # Check if password and password confirmation are equal
-        if password != password_confirmation:
-            return render_template("register.html", error_message="Passwords do not match. ")
-        # Add user to database
-        user = "INSERT INTO users (username, hash) VALUES(%s, %s)"
-        data = (username, generate_password_hash(password))
-        cursor.execute(user, data)
-        connection.commit()
-        # Close cursor
-        cursor.close()
-        return redirect("/")
-    # This function will be called when someone accesses the root URL
-    return render_template('register.html')
+    form=RegisterForm()
+    if request.method == 'POST':
+        if not form.validate_on_submit():
+            if form.password.data != form.confirmPassword.data:
+                flash('Passwords do not match')
+            else:
+                flash('Something went wrong in registration')
+            return render_template('register.html',form=form)
+        user = UserModel.query.filter_by(email = form.email.data ).first()
+        if user is None:
+            if form.password.data == form.confirmPassword.data:
+                addUser(form.email.data, form.password.data)
+                flash('Registration successful')
+                return redirect(url_for('login'))
+            else:
+                flash('Passwords do not match')
+                return render_template('register.html',form=form)
+        else:
+            flash('Email already registered')
+            return render_template('register.html',form=form)    
+    return render_template('register.html',form=form)
 
 @app.route('/add_birthday', methods=["GET", "POST"])
 def add_birthday():

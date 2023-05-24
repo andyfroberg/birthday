@@ -5,10 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 loginManager=LoginManager()
 
+##CREATE TABLE
 class UserModel(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
     passwordHash = db.Column(db.String(128), nullable=False)
+    # name = db.Column(db.String(100))
     
     def setPassword(self, password):
         self.passwordHash = generate_password_hash(password)
