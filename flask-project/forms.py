@@ -13,14 +13,8 @@ class RegisterForm(FlaskForm):
     confirmPassword = PasswordField('confirmPassword', validators=[DataRequired(), EqualTo('password'), Length(min=5, max=50)])
 
 
-class NameAndDateForm(FlaskForm):
-    firstName = StringField('firstName', validators=[DataRequired(), Length(min=1, max=50)])
-    lastName = StringField('lastName', validators=[DataRequired(), Length(min=1, max=50)])
+class ReminderEventForm(FlaskForm):
+    title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
+    description = TextAreaField('description', validators=[Length(max=250)])
     date = DateField('date', format= '%Y-%m-%d', validators=[DataRequired()])
 
-    
-
-class DescriptionForm(FlaskForm):
-    title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
-    description = TextAreaField('description', validators=[DataRequired(), Length(min=1, max=500)])
-    date = DateField('date', format='%Y-%m-%d', validators=[DataRequired()])

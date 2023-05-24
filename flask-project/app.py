@@ -2,7 +2,7 @@
 # Import the necessary modules
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import LoginForm, NameAndDateForm, DescriptionForm, RegisterForm
+from forms import LoginForm, ReminderEventForm, RegisterForm
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, loginManager, UserModel
 from event import NameAndDateEvent, DescriptionEvent
@@ -110,39 +110,37 @@ def register():
 
 @app.route('/add_birthday', methods=["GET", "POST"])
 def add_birthday():
-    birthdayForm = NameAndDateForm()
+    birthdayForm = ReminderEventForm()
     global my_events
     if birthdayForm.validate_on_submit():
         # data collected from form to be added to db
-        firstName = request.form['firstName']
-        lastName = request.form['lastName']
+        title = request.form['title']
+        description = request.form['description']
         date = request.form['date']
-        full_name = f"{firstName} {lastName}"
         # mock event creation this will be done in get_events
-        new_birthday = NameAndDateEvent(date, full_name)
+        new_birthday = NameAndDateEvent(date, title)
         my_events.append(new_birthday)
         return redirect(url_for('reminders'))
     return render_template('add_birthday.html', birthdayForm=birthdayForm)
 
 @app.route('/add_anniversary', methods=["GET", "POST"])
 def add_anniversary():
-    anniversaryForm = NameAndDateForm()
+    anniversaryForm = ReminderEventForm()
     global my_events
     if anniversaryForm.validate_on_submit():
         # data collected from form to be added to db
-        firstName = request.form['firstName']
-        lastName = request.form['lastName']
+        title = request.form['title']
+        description = request.form['description']
         date = request.form['date']
-        full_name = f"{firstName} {lastName}"
         # mock event creation this will be done in get_events
-        new_anniversary = NameAndDateEvent(date, full_name)
+        new_anniversary = NameAndDateEvent(date, title)
         my_events.append(new_anniversary)
         return redirect(url_for('reminders'))
     return render_template('add_anniversary.html', anniversaryForm=anniversaryForm)
 
 @app.route('/add_other', methods=["GET", "POST"])
 def add_other():
-    descriptionForm = DescriptionForm()
+    descriptionForm = ReminderEventForm()
     global my_events
     if descriptionForm.validate_on_submit():
         # data collected from form to be added to db
@@ -153,10 +151,13 @@ def add_other():
         new_description_event = DescriptionEvent(date, title, description)
         my_events.append(new_description_event)
         return redirect(url_for('reminders'))
+    else:
+        flash('Missing entries')
     return render_template('add_other.html', descriptionForm=descriptionForm)
 
 def get_events():
     # will grab event data from db and create Event class objects for each event
+    # Event(date, title, description=None)
     # return the list of them to be used in reminders to display events
     # possible sorting: by date, name, add importance attr to event classes?
     pass
@@ -168,13 +169,6 @@ def convert_date_to_julian(date_string):
     # the large number is the offset to equal the noon of the entered date
     julian_day = date.toordinal() + 1721425
     return julian_day
-
-def convert_date_from_julian(julian_day):
-    date = datetime.datetime.fromordinal(julian_day - 1721425)
-    month = date.month
-    day = date.day
-    date_str = f"{month} / {day}"
-    return date_str
 
 @app.route('/reminders', methods=["GET", "POST"])
 def reminders():
