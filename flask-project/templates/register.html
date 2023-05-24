@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+  {% block content %}
 
   </header>
   <main>
@@ -39,7 +40,7 @@
                       class="btn btn-primary btn-block btn-lg gradient-custom-4">Register</button>
                   </div>
   
-                  <p class="text-center text-muted mt-5 mb-0">Have already an account? <a href="{{url_for('login')}}"
+                  <p class="text-center text-muted mt-5 mb-0">Already have an account? <a href="{{url_for('login')}}"
                       class="fw-bold text-body"><u>Login here</u></a></p> 
                 </form>
   
@@ -50,9 +51,4 @@
       </div>
     </div>
   </section>
-
-
-  </main>
-  <footer>
-    <!-- place footer here -->
-  </footer>
+{% endblock content %} 

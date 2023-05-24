@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+  {% block content %} 
   <form method="post">
     {{birthdayForm.csrf_token}}
     <div class="container py-5 h-100">
@@ -29,3 +29,4 @@
       </div>
     </div>
   </form>
+  {% endblock content %} 
