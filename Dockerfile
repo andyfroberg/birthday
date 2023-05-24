@@ -1,6 +1,7 @@
-FROM debian:buster-slim
+FROM python:latest
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -y update && apt-get -y install python3 python3-pip curl procps
-RUN pip3 install --upgrade pip && pip3 install flask
-COPY app /usr/local/bin/app
-CMD /usr/local/bin/app/app.py
+RUN pip3 install --upgrade pip
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+COPY flask-project /usr/local/bin/flask-project
+CMD /usr/local/bin/flask-project/app.py
