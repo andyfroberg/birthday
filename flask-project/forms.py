@@ -12,10 +12,13 @@ class RegisterForm(FlaskForm):
     password = PasswordField('password', validators=[DataRequired(), Length(min=5, max=50)])
     confirmPassword = PasswordField('confirmPassword', validators=[DataRequired(), EqualTo('password'), Length(min=5, max=50)])
 
+
 class NameAndDateForm(FlaskForm):
     firstName = StringField('firstName', validators=[DataRequired(), Length(min=1, max=50)])
     lastName = StringField('lastName', validators=[DataRequired(), Length(min=1, max=50)])
     date = DateField('date', format= '%Y-%m-%d', validators=[DataRequired()])
+
+    
 
 class DescriptionForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
