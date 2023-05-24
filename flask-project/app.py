@@ -2,9 +2,11 @@
 # Import the necessary modules
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, NameAndDateForm, DescriptionForm, RegisterForm
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, loginManager, UserModel
+from event import NameAndDateEvent, DescriptionEvent
+import datetime
 
 
 # Create a new Flask application instance
