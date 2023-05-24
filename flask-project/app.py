@@ -23,6 +23,9 @@ db.init_app(app)
 #initialize the login manager
 loginManager.init_app(app)
 
+#testing event list
+my_events = []
+
 def addUser(email, password):
     user = UserModel()
     user.setPassword(password)
