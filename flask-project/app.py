@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from forms import LoginForm, ReminderEventForm, RegisterForm
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, loginManager, UserModel
-from event import NameAndDateEvent, DescriptionEvent
+from event import Event
 import datetime
 
 
@@ -81,8 +81,8 @@ def login():
 def logout():
     logout_user()
     session.pop('email', None)
-    # This function will be called when someone accesses the root URL
-    return redirect(url_for('home'))
+    # Currently no logout.html redirects to login page after logout, which I suppose is fine?
+    return redirect(url_for('login'))
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -108,59 +108,31 @@ def register():
             return render_template('register.html',form=form)    
     return render_template('register.html',form=form)
 
-@app.route('/add_birthday', methods=["GET", "POST"])
-def add_birthday():
-    birthdayForm = ReminderEventForm()
+@app.route('/add_event', methods=["GET", "POST"])
+def add_event():
+    eventForm = ReminderEventForm()
     global my_events
-    if birthdayForm.validate_on_submit():
+    if eventForm.validate_on_submit():
         # data collected from form to be added to db
         title = request.form['title']
-        description = request.form['description']
         date = request.form['date']
+        date = convert_date_to_julian(date)
         # mock event creation this will be done in get_events
-        new_birthday = NameAndDateEvent(date, title)
-        my_events.append(new_birthday)
+        new_event = Event(date, title)
+        my_events.append(new_event)
         return redirect(url_for('reminders'))
-    return render_template('add_birthday.html', birthdayForm=birthdayForm)
-
-@app.route('/add_anniversary', methods=["GET", "POST"])
-def add_anniversary():
-    anniversaryForm = ReminderEventForm()
-    global my_events
-    if anniversaryForm.validate_on_submit():
-        # data collected from form to be added to db
-        title = request.form['title']
-        description = request.form['description']
-        date = request.form['date']
-        # mock event creation this will be done in get_events
-        new_anniversary = NameAndDateEvent(date, title)
-        my_events.append(new_anniversary)
-        return redirect(url_for('reminders'))
-    return render_template('add_anniversary.html', anniversaryForm=anniversaryForm)
-
-@app.route('/add_other', methods=["GET", "POST"])
-def add_other():
-    descriptionForm = ReminderEventForm()
-    global my_events
-    if descriptionForm.validate_on_submit():
-        # data collected from form to be added to db
-        title = request.form['title']
-        description = request.form['description']
-        date = request.form['date']
-        # mock event creation this will be done in get_events
-        new_description_event = DescriptionEvent(date, title, description)
-        my_events.append(new_description_event)
-        return redirect(url_for('reminders'))
-    else:
-        flash('Missing entries')
-    return render_template('add_other.html', descriptionForm=descriptionForm)
+    return render_template('add_event.html', eventForm=eventForm)
 
 def get_events():
     # will grab event data from db and create Event class objects for each event
-    # Event(date, title, description=None)
-    # return the list of them to be used in reminders to display events
-    # possible sorting: by date, name, add importance attr to event classes?
-    pass
+    # Event(date, title)
+    # event_list = []
+    # grab julian date and event name from db for each event tied to user
+    # add to list
+    # sort list and return
+    global my_events
+    my_events.sort()
+    return my_events
 
 def convert_date_to_julian(date_string):
     date_format = "%Y-%m-%d"
@@ -173,7 +145,7 @@ def convert_date_to_julian(date_string):
 @app.route('/reminders', methods=["GET", "POST"])
 def reminders():
     global my_events
-    return render_template('reminders.html', events=my_events)
+    return render_template('reminders.html', events=get_events())
 
 # Run the application if this script is being run directly
 if __name__ == '__main__':

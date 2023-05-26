@@ -1,7 +1,7 @@
 {% extends "base.html" %}
   {% block content %}
   <form method="post">
-    {{descriptionForm.csrf_token}}
+    {{eventForm.csrf_token}}
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-60">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -11,18 +11,10 @@
                 <h3 class="fw-bold mb-4 text-uppercase">Add Reminder</h3>
               
                 <div class="form-outline form-white mb-4">
-                  {{ descriptionForm.title(class="form-inline", placeholder="Event Title") }}
+                  {{ eventForm.title(class="form-inline", placeholder="Event Title") }}
                 </div>
-				<div class="form-group">
-    				<textarea class="form-control" id="textarea" rows="3"></textarea>
-                    {{ descriptionForm.description(class="form-inline", placeholder="Event Description") }}
-  				</div>       
-                <!--div class="form-outline form-white mb-4">
-                  {{ descriptionForm.description(class="form-inline", placeholder="Event Description") }}
-                </div-->
-              </div>
               <div class="form-outline form-white mb-4">
-                {{ descriptionForm.date(class="form-inline", placeholder="Date") }}
+                {{ eventForm.date(class="form-inline", placeholder="Date") }}
               </div>
               <button type="Submit "class="btn btn-primary mb-2">Enter</button>
               </div>

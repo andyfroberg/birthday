@@ -15,6 +15,5 @@ class RegisterForm(FlaskForm):
 
 class ReminderEventForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
-    description = TextAreaField('description', validators=[Length(max=250)])
     date = DateField('date', format= '%Y-%m-%d', validators=[DataRequired()])
 

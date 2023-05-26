@@ -10,16 +10,13 @@
             Add Reminder
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{url_for('add_birthday')}}">Birthday</a></li>
-            <li><a class="dropdown-item" href="{{url_for('add_anniversary')}}">Anniversary</a></li>
-            <li><a class="dropdown-item" href="#">Holiday</a></li>
-            <li><a class="dropdown-item" href="{{url_for('add_other')}}">Other</a></li>
+            <li><a class="dropdown-item" href="{{url_for('add_event')}}">Add a Reminder!</a></li>
           </ul>
         </div>
     <div
       <ul class="list-group">
         {% for event in events %}
-        <li class="list-group-item"> {{ event.name, event.date }}  </li>
+        <li class="list-group-item"> {{ event.event_title, event.date }}  </li>
         {% endfor %}
     </ul>
   </div>
