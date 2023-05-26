@@ -1,65 +1,30 @@
-import uuid
-from abc import ABC
+import datetime
 
-class Event(ABC):
-    def __init__(self, date):
-        self.__date = date
-        self.__id = self.generate_event_id()
-
-    @staticmethod
-    def generate_event_id():
-        return uuid.uuid4()
+class Event:
+    
+    def __init__(self, date, event_title):
+        self.__julian_date = date
+        self.date = self.convert_date_from_julian(self.__julian_date)
+        self.event_title = event_title
+    
+    def __repr__(self):
+        ret_str = ""
+        ret_str += f"{self.__event_title}\n"
+        ret_str += f"{self.__date}"
+        return ret_str
+    
+    def __lt__(self, other):
+        return self.julian_date < other.julian_date
 
     @property
-    def date(self):
-        return self.__date
+    def julian_date(self):
+        return self.__julian_date
 
-    @date.setter
-    def date(self, date):
-        self.__date = date
-
-    @property
-    def id(self):
-        return self.__id
-
-class NameAndDateEvent(Event):
-    """
-    Event that has a name tied to the date.
-    Anniversaries, birthdays or holiday's.
-    """
-    
-    def __init__(self, date, name):
-        super().__init__(date)
-        self.__name = name
-    
-    @property
-    def name(self):
-        return self.__name
-
-    @name.setter
-    def name(self, name):
-        self.__name = name
-    
-class DescriptionEvent(Event):
-    """For any other kind of event reminders, like interview, get together, etc."""
-    
-    def __init__(self, date, title, description):
-        super().__init__(date)
-        self.__title = title
-        self.__description = description
-    
-    @property
-    def title(self):
-        return self.__title
-
-    @title.setter
-    def title(self, title):
-        self.__title = title
-    
-    @property
-    def description(self):
-        return self.__description
-
-    @description.setter
-    def description(self, description):
-        self.__name = description
+    def convert_date_from_julian(self, julian_date):
+        date = datetime.datetime.fromordinal(julian_date - 1721425)
+        month = date.month
+        day = date.day
+        # if we want to include year
+        # year = date.year
+        date_str = f"{month} / {day}"
+        return date_str

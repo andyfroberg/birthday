@@ -1,25 +1,20 @@
 {% extends "base.html" %}
   {% block content %}
   <form method="post">
-    {{anniversaryForm.csrf_token}}
+    {{eventForm.csrf_token}}
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-60">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card bg-light text-dark" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
               <div class="mb-md-5 mt-md-4">
-                <h3 class="fw-bold mb-4 text-uppercase">Add Anniversary</h3>
+                <h3 class="fw-bold mb-4 text-uppercase">Add Reminder</h3>
               
                 <div class="form-outline form-white mb-4">
-                  {{ anniversaryForm.firstName(class="form-inline", placeholder="First Name") }}
+                  {{ eventForm.title(class="form-inline", placeholder="Event Title") }}
                 </div>
-
-                <div class="form-outline form-white mb-4">
-                  {{ anniversaryForm.lastName(class="form-inline", placeholder="Last Name") }}
-                </div>
-              </div>
               <div class="form-outline form-white mb-4">
-                {{ anniversaryForm.date(class="form-inline", placeholder="Date") }}
+                {{ eventForm.date(class="form-inline", placeholder="Date") }}
               </div>
               <button type="Submit "class="btn btn-primary mb-2">Enter</button>
               </div>
