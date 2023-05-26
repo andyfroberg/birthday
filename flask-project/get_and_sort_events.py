@@ -41,7 +41,7 @@ def get_events(user_email, session):
         session (sqlalchemy.orm.session.Session): SQLAlchemy Session object.
 
     Returns:
-        None. Prints the events directly. Can be modified to return or process events as needed.
+        list : list of Event objects
     """
     # Get the current year
     current_year = datetime.now().year
