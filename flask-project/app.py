@@ -4,7 +4,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from forms import LoginForm, ReminderEventForm, RegisterForm
 from flask_login import login_user, logout_user, login_required, current_user
-from models import db, loginManager, UserModel
+from models import db, loginManager, UserModel, EventModel
 from event import Event
 import datetime
 
@@ -14,11 +14,13 @@ app = Flask(__name__)
 app.secret_key="secret"
 
 #database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///login.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///birthday.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #initialize the database
 db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 #initialize the login manager
 loginManager.init_app(app)
@@ -26,10 +28,11 @@ loginManager.init_app(app)
 #testing event list
 my_events = []
 
-def addUser(email, password):
+def addUser(email, username, password):
     user = UserModel()
     user.setPassword(password)
-    user.email=email
+    user.email = email
+    user.username = username
     db.session.add(user)
     db.session.commit()
 
@@ -40,15 +43,15 @@ def authHandler():
     flash('Please login to access this page')
     return render_template('login.html',form=form)
 
-# some setup code because we don't have a registration page or database
-@app.before_first_request
-def create_table():
-    db.create_all()
-    user = UserModel.query.filter_by(email = 'xil1314@uw.edu' ).first()
-    if user is None:
-        addUser("xil1314@uw.edu","506506")
-    else:
-        logout_user()
+# # some setup code because we don't have a registration page or database
+# @app.before_first_request
+# def create_table():
+#     db.create_all()
+#     user = UserModel.query.filter_by(email = 'xil1314@uw.edu' ).first()
+#     if user is None:
+#         addUser("xil1314@uw.edu","506506")
+#     else:
+#         logout_user()
 
 
 @app.route('/home')
@@ -94,12 +97,12 @@ def register():
             else:
                 flash('Something went wrong in registration')
             return render_template('register.html',form=form)
-        user = UserModel.query.filter_by(email = form.email.data ).first()
+        user = UserModel.query.filter_by(email=form.email.data).first()
         if user is None:
             if form.password.data == form.confirmPassword.data:
-                addUser(form.email.data, form.password.data)
+                addUser(form.email.data, form.username.data, form.password.data)  # Need username validation?
                 flash('Registration successful')
-                return redirect(url_for('login'))
+                return redirect(url_for('reminders'))  # may need to go back to 'login' if still buggy
             else:
                 flash('Passwords do not match')
                 return render_template('register.html',form=form)
