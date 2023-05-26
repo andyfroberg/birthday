@@ -76,6 +76,7 @@ def login():
             return render_template('login.html',form=form)
         login_user(user)
         session['email'] = form.email.data
+        print(str(session.get('email')))
         return redirect(url_for('reminders'))
     return render_template("login.html", form=form)
 
@@ -102,6 +103,8 @@ def register():
             if form.password.data == form.confirmPassword.data:
                 addUser(form.email.data, form.username.data, form.password.data)  # Need username validation?
                 flash('Registration successful')
+                session['email'] = form.email.data
+                # login_user(user)
                 return redirect(url_for('reminders'))  # may need to go back to 'login' if still buggy
             else:
                 flash('Passwords do not match')
@@ -120,7 +123,7 @@ def add_event():
         event = EventModel()
         event.event_title = request.form['title']
         event.event_date = convert_date_to_julian(request.form['date'])
-        # event.user_owner = session['email']  # Might be wrong (would this be easier if we had user_id in db instead of email being primary key?)
+        event.user_owner = session.get('email')  # Might be wrong (would this be easier if we had user_id in db instead of email being primary key?)
         db.session.add(event)
         db.session.commit()
         return redirect(url_for('reminders'))
