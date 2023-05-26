@@ -3,6 +3,7 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship, DeclarativeMeta
 from sqlalchemy.orm import declarative_base
 from datetime import datetime, timedelta
+from event import Event
 
 # Define base model for SQLAlchemy
 Base: DeclarativeMeta = declarative_base()
@@ -56,12 +57,18 @@ def get_events(user_email, session):
         # Sort the events by date and event title
         sorted_events = sorted(events, key=lambda event: (event.date_of_event, event.event_title))
         # Print each event; this can be replaced with other processing or return statements as needed
+        event_lst = []
         for event in sorted_events:
             # Convert the Julian day to a datetime object
-            event_date = datetime(current_year, 1, 1) + timedelta(days=event.date_of_event - 1)
+            # event_date = datetime(current_year, 1, 1) + timedelta(days=event.date_of_event - 1)
             # Format the datetime object in the specified format
-            formatted_date = event_date.strftime('%A, %B ') + ordinal(event_date.day)
-            print(f'Event: {event.event_title}, Date: {formatted_date}')
+            # formatted_date = event_date.strftime('%A, %B ') + ordinal(event_date.day)
+            # print(f'Event: {event.event_title}, Date: {formatted_date}')
+            
+            # creates a list of Event class objects to be returned for app.py to render on reminders.html
+            # currently julian date conversion occurs at creation of Event object, but can be changed if needed
+            even_lst.append(Event(event.date_of_event, event.event_title))
+        return event_lst
     else:
         print(f'No user found with email: {user_email}')
 
@@ -72,7 +79,7 @@ def main():
     It sets up the SQLite database and fetches upcoming events for a specific user.
     """
     # Set up database engine and session
-    engine = create_engine('sqlite:///TEST_Birthday_Reminder_2.db')
+    engine = create_engine('sqlite:///Birthday_Reminder.db')
     Session = sessionmaker(bind=engine)
     session = Session()
 
