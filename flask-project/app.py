@@ -67,7 +67,7 @@ def login():
         if not form.validate_on_submit():
             flash('Please enter a valid email and password')
             return render_template('login.html',form=form)
-        user = UserModel.query.filter_by(email=form.email.data ).first()
+        user = UserModel.query.filter_by(email=form.email.data).first()
         if user is None:
             flash('Please enter a valid email')
             return render_template('login.html',form=form)
@@ -117,13 +117,14 @@ def add_event():
     global my_events
     if eventForm.validate_on_submit():
         # data collected from form to be added to db
-        title = request.form['title']
-        date = request.form['date']
-        date = convert_date_to_julian(date)
-        # mock event creation this will be done in get_events
-        new_event = Event(date, title)
-        my_events.append(new_event)
+        event = EventModel()
+        event.event_title = request.form['title']
+        event.event_date = convert_date_to_julian(request.form['date'])
+        # event.user_owner = session['email']  # Might be wrong (would this be easier if we had user_id in db instead of email being primary key?)
+        db.session.add(event)
+        db.session.commit()
         return redirect(url_for('reminders'))
+
     return render_template('add_event.html', eventForm=eventForm)
 
 def get_events():
