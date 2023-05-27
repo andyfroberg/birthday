@@ -17,6 +17,16 @@ class UserModel(UserMixin, db.Model):
     
     def checkPassword(self, password):
         return check_password_hash(self.passwordHash, password)
+    
+
+##CREATE TABLE
+class ReminderModel(UserMixin, db.Model):
+    event_title = db.Column(db.Integer, primary_key=True)
+    user_email = db.Column(db.String(50), unique=True, nullable=False)
+    date = db.Column(db.String(128), nullable=False)
+   
+    
+
 
 @loginManager.user_loader
 def loadUser(id):

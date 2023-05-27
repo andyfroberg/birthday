@@ -13,12 +13,29 @@
             <li><a class="dropdown-item" href="{{url_for('add_event')}}">Add a Reminder!</a></li>
           </ul>
         </div>
-    <div
-      <ul class="list-group">
-        {% for event in events %}
-        <li class="list-group-item"> {{ event.event_title, event.date }}  </li>
-        {% endfor %}
-    </ul>
-  </div>
+      <table class="table mb-4">
+
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Event</th>
+            <th scope="col">Date</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+          <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>{{ event.event_title }}</td>
+            <td>{{ event.date }}</td>
+            <td>
+              <button type="button" class="btn btn-warning">Edit</button>
+              <button type="button" class="btn btn-danger ms-1">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        </table>
 
 {% endblock content %} 
