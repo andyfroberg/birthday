@@ -152,7 +152,14 @@ def convert_date_to_julian(date_string):
 @app.route('/reminders', methods=["GET", "POST"])
 def reminders():
     global my_events
-    return render_template('reminders.html', events=get_events())
+    # Check if there are any reminders in the database. (Check edge case if user is not logged in and goes to this page. Does this cause an error?)
+    events = EventModel.query.all()
+    # If not, return the empty table (with table headings)
+
+    # If there are reminders in datababse, then display them
+
+    # return render_template('reminders.html', events=get_events())
+    return render_template('reminders.html', events=events)
 
 # Run the application if this script is being run directly
 if __name__ == '__main__':

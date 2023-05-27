@@ -5,7 +5,7 @@
     </div>
     <div class="container">
       <div class="row justify-content-start">
-    <div class="dropdown">
+    <div class="dropdown mb-3">
           <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             Add Reminder
           </a>
@@ -13,12 +13,21 @@
             <li><a class="dropdown-item" href="{{url_for('add_event')}}">Add a Reminder!</a></li>
           </ul>
         </div>
-    <div
-      <ul class="list-group">
+    <div>
+      <table class="table table-striped">
+        <tr class="table-primary">
+            <td class="table-primary">Event Name</td>
+            <td class="table-primary">Event Date</td>
+            <td class="table-primary">Options</td>
+        </tr>
         {% for event in events %}
-        <li class="list-group-item"> {{ event.event_title, event.date }}  </li>
+        <tr>
+            <td>{{ event.event_title }}</td>
+            <td>{{ event.event_date }}</td>
+            <td><a href="#">Edit</a></td>
+        </tr>
         {% endfor %}
-    </ul>
+      </table>
   </div>
 
 {% endblock content %} 
