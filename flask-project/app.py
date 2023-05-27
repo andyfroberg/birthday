@@ -2,11 +2,13 @@
 # Import the necessary modules
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import LoginForm, ReminderEventForm, RegisterForm
+from forms import LoginForm, ReminderEventForm, RegisterForm, CelebrityEventForm
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, loginManager, UserModel, EventModel
-from event import Event
-import datetime
+# from event import Event
+from datetime import datetime
+import requests
+import json
 
 
 # Create a new Flask application instance
@@ -117,6 +119,7 @@ def register():
 @app.route('/add_event', methods=["GET", "POST"])
 def add_event():
     eventForm = ReminderEventForm()
+    celebForm = CelebrityEventForm()
     global my_events
     if eventForm.validate_on_submit():
         # data collected from form to be added to db
@@ -127,6 +130,17 @@ def add_event():
         db.session.add(event)
         db.session.commit()
         return redirect(url_for('reminders'))
+    
+    if celebForm.validate_on_submit():
+        # call api
+        event = EventModel()
+        event.event_title = request.form['title']
+        event.event_date = convert_date_to_julian(get_celebrity_dob(event.event_title))  # need to figure out how to handle errors
+        event.user_owner = session.get('email')
+        db.session.add(event)
+        db.session.commit()
+        return redirect(url_for('reminders'))
+        # if birthday not found, flash an error
 
     return render_template('add_event.html', eventForm=eventForm)
 
@@ -143,23 +157,61 @@ def get_events():
 
 def convert_date_to_julian(date_string):
     date_format = "%Y-%m-%d"
-    date = datetime.datetime.strptime(date_string, date_format)
+    date = datetime.strptime(date_string, date_format)
     #other way is to use jdcal but couldn't get the import module working
     # the large number is the offset to equal the noon of the entered date
     julian_day = date.toordinal() + 1721425
     return julian_day
 
+def convert_date_from_julian(julian_date):
+        date = datetime.fromordinal(julian_date - 1721425)
+        month = date.month
+        day = date.day
+        # if we want to include year
+        # year = date.year
+        date_str = f"{month} / {day}"
+        return date_str
+
 @app.route('/reminders', methods=["GET", "POST"])
 def reminders():
-    global my_events
-    # Check if there are any reminders in the database. (Check edge case if user is not logged in and goes to this page. Does this cause an error?)
-    events = EventModel.query.all()
-    # If not, return the empty table (with table headings)
-
-    # If there are reminders in datababse, then display them
-
-    # return render_template('reminders.html', events=get_events())
+    # global my_events
+    events = db.session.query(EventModel).join(UserModel).filter(EventModel.user_owner==session.get('email')).all()
+    for event in events:
+        event.event_date = convert_date_from_julian(event.event_date)
     return render_template('reminders.html', events=events)
+
+
+def get_celebrity_dob(celebrity_name):
+    """
+    Fetches the date of birth of a celebrity from an API.
+
+    Args:
+        celebrity_name: Name of the celebrity.
+
+    Returns:
+        dob_datetime: The date of birth of the celebrity as a datetime object, or None if not found.
+    """
+    # API endpoint URL
+    api_url = "https://api.api-ninjas.com/v1/celebrity"
+    # Parameters for the API request
+    params = {'name': celebrity_name.lower().replace(' ', '_')}
+    headers = {'X-Api-Key': '4enulfTgfsbrl/wW7JiaoQ==jLNpv26JHetz3tHp'}
+    # Make the API request
+    response = requests.get(api_url, headers=headers, params=params)
+    # Raise an exception if the request was unsuccessful
+    response.raise_for_status()
+    # Parse the response JSON
+    data = response.json()
+    if not data:
+        print(f"{celebrity_name}'s birthday is not available.")
+        return None
+    # Extract and parse the date of birth
+    # dob_str = str(data[0]['birthday'])
+    dob_str = data[0]['birthday']
+    # dob_datetime = datetime.strptime(dob_str, "%Y-%m-%d")
+    return dob_str
+
+
 
 # Run the application if this script is being run directly
 if __name__ == '__main__':
