@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 loginManager=LoginManager()
 
+
+
 ##CREATE TABLE
 class UserModel(UserMixin, db.Model):
     id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
