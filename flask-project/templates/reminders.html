@@ -5,7 +5,7 @@
     </div>
     <div class="container">
       <div class="row justify-content-start">
-    <div class="dropdown">
+    <div class="dropdown mb-3">
           <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             Add Reminder
           </a>
@@ -13,12 +13,37 @@
             <li><a class="dropdown-item" href="{{url_for('add_event')}}">Add a Reminder!</a></li>
           </ul>
         </div>
-    <div
-      <ul class="list-group">
+    <div>
+
+      <table class="table mb-4">
+
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Event</th>
+            <th scope="col">Date</th>
+            <th scope="col">Actions</th>
+        </thead>
+        <tbody>
+        {% if events is not none %}
         {% for event in events %}
-        <li class="list-group-item"> {{ event.event_title, event.date }}  </li>
-        {% endfor %}
-    </ul>
+          <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>{{ event.event_title }}</td>
+            <td>{{ event.event_date }}</td>
+            <td>
+              <form action="{{ url_for('update_event', event_id=event.event_id) }}" method="GET" style ='float: left'>
+                <button type="submit" class="btn btn-warning">Edit</button>
+              </form>
+              <form action="{{ url_for('delete_event', event_id=event.event_id) }}" method="GET" style ='float: left'>
+                <button type="submit" class="btn btn-danger ms-1">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+          {% endif %}
+        </tbody>
+        </table>
   </div>
 
 {% endblock content %} 
