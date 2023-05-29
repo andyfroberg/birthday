@@ -67,7 +67,7 @@ def get_events(user_email, session):
             
             # creates a list of Event class objects to be returned for app.py to render on reminders.html
             # currently julian date conversion occurs at creation of Event object, but can be changed if needed
-            even_lst.append(Event(event.date_of_event, event.event_title))
+            event_lst.append(Event(event.date_of_event, event.event_title))
         return event_lst
     else:
         print(f'No user found with email: {user_email}')

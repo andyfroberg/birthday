@@ -24,7 +24,7 @@
         <tr>
             <td>{{ event.event_title }}</td>
             <td>{{ event.event_date }}</td>
-            <td><a href="#">Edit</a></td>
+            <td><a href="{{ url_for('edit_event', event_repr=event) }}">Edit</a></td>
         </tr>
         {% endfor %}
       </table>

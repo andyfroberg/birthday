@@ -2,7 +2,7 @@
 # Import the necessary modules
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import LoginForm, ReminderEventForm, RegisterForm, CelebrityEventForm
+from forms import LoginForm, ReminderEventForm, RegisterForm, CelebrityEventForm, EventEditForm
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, loginManager, UserModel, EventModel
 # from event import Event
@@ -165,6 +165,7 @@ def convert_date_to_julian(date_string):
 
 def convert_date_from_julian(julian_date):
         date = datetime.fromordinal(julian_date - 1721425)
+        # date = datetime.fromordinal(int(julian_date) - 1721425)
         month = date.month
         day = date.day
         # if we want to include year
@@ -203,13 +204,23 @@ def get_celebrity_dob(celebrity_name):
     # Parse the response JSON
     data = response.json()
     if not data:
-        print(f"{celebrity_name}'s birthday is not available.")
+        print(f"{celebrity_name}'s birthday is not available.")  # Use flash in add_reminders instead.
         return None
     # Extract and parse the date of birth
     # dob_str = str(data[0]['birthday'])
     dob_str = data[0]['birthday']
     # dob_datetime = datetime.strptime(dob_str, "%Y-%m-%d")
     return dob_str
+
+@app.route('/edit-event/<event_repr>', methods=["GET", "POST"])
+def edit_event(event_repr):
+    eventEditForm = EventEditForm()
+    event = EventModel.query.filter_by(event_id=event_repr).first()
+    event_title = event.event_title
+    event_display_date = convert_date_from_julian(event.event_date)
+    # event = id
+    return render_template('edit_event.html', eventEditForm=eventEditForm, 
+                           event=event, event_title=event_title, event_display_date=event_display_date)
 
 
 
