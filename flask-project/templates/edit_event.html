@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+  {% block content %}
+  <h2 class="row d-flex justify-content-center align-items-center">Edit {{ event.event_title }}</h2>
+  <table class="table table-striped">
+    <tr>
+        <td>{{ event.event_title }}</td>
+    </tr>
+    <tr>
+        <td>{{ event_display_date }}</td>
+    </tr>
+  </table>
+  <form method="post">
+    {{eventEditForm.csrf_token}}
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-60">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card bg-light text-dark" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+              <div class="mb-md-5 mt-md-4">
+                <h3 class="fw-bold mb-4 text-uppercase">Edit {{ event.event_title }}</h3>
+              
+                <div class="form-outline form-white mb-4">
+                  {{ eventEditForm.title(class="form-inline", placeholder="event_title") }}
+                </div>
+              <div class="form-outline form-white mb-4">
+                {{ eventEditForm.date(class="form-inline", placeholder="Date") }}
+              </div>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                  Month
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                  <li><button class="dropdown-item" type="button">Jan</button></li>
+                  <li><button class="dropdown-item" type="button">Feb</button></li>
+                  <li><button class="dropdown-item" type="button">Mar</button></li>
+                </ul>
+              </div>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                  Day
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                  <li><button class="dropdown-item" type="button">1</button></li>
+                  <li><button class="dropdown-item" type="button">2</button></li>
+                  <li><button class="dropdown-item" type="button">3</button></li>
+                </ul>
+              </div>
+              <button type="Submit "class="btn btn-primary mb-2">Enter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+{% endblock content %}
