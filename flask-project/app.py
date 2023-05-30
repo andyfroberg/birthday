@@ -27,8 +27,8 @@ with app.app_context():
 #initialize the login manager
 loginManager.init_app(app)
 
-#testing event list
-my_events = []
+# #testing event list
+# my_events = []
 
 def addUser(email, username, password):
     user = UserModel()
@@ -56,10 +56,15 @@ def authHandler():
 #         logout_user()
 
 
-@app.route('/home')
+@app.route('/')
 def home():
+    logged_in = False
+    user_name = ""
+    if current_user.is_authenticated:
+        logged_in = True  # Update this based on user authentication status
+        user_name = current_user.username
     # This function will be called when someone accesses the root URL
-    return render_template('home.html')
+    return render_template('home.html', logged_in=logged_in, user_name=user_name)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -78,7 +83,7 @@ def login():
             return render_template('login.html',form=form)
         login_user(user)
         session['email'] = form.email.data
-        print(str(session.get('email')))
+        # print(str(session.get('email')))
         return redirect(url_for('reminders'))
     return render_template("login.html", form=form)
 
@@ -87,11 +92,15 @@ def login():
 def logout():
     logout_user()
     session.pop('email', None)
-    # Currently no logout.html redirects to login page after logout, which I suppose is fine?
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
+    logged_in = False
+    user_name = ""
+    if current_user.is_authenticated:
+        logged_in = True  # Update this based on user authentication status
+        user_name = current_user.username
     form=RegisterForm()
     if request.method == 'POST':
         if not form.validate_on_submit():
@@ -106,7 +115,8 @@ def register():
                 addUser(form.email.data, form.username.data, form.password.data)  # Need username validation?
                 flash('Registration successful')
                 session['email'] = form.email.data
-                # login_user(user)
+                user = UserModel.query.filter_by(email=form.email.data).first()
+                login_user(user)
                 return redirect(url_for('reminders'))  # may need to go back to 'login' if still buggy
             else:
                 flash('Passwords do not match')
@@ -114,13 +124,17 @@ def register():
         else:
             flash('Email already registered')
             return render_template('register.html',form=form)    
-    return render_template('register.html',form=form)
+    return render_template('register.html',form=form, logged_in=logged_in, user_name=user_name)
 
 @app.route('/add_event', methods=["GET", "POST"])
 def add_event():
+    logged_in = False
+    user_name = ""
+    if current_user.is_authenticated:
+        logged_in = True  # Update this based on user authentication status
+        user_name = current_user.username
     eventForm = ReminderEventForm()
     celebForm = CelebrityEventForm()
-    global my_events
     if eventForm.validate_on_submit():
         # data collected from form to be added to db
         event = EventModel()
@@ -129,8 +143,7 @@ def add_event():
         event.user_owner = session.get('email')  # Might be wrong (would this be easier if we had user_id in db instead of email being primary key?)
         db.session.add(event)
         db.session.commit()
-        return redirect(url_for('reminders'))
-    
+        return redirect(url_for('reminders')) 
     if celebForm.validate_on_submit():
         # call api
         event = EventModel()
@@ -142,18 +155,46 @@ def add_event():
         return redirect(url_for('reminders'))
         # if birthday not found, flash an error
 
-    return render_template('add_event.html', eventForm=eventForm)
+    return render_template('add_event.html', eventForm=eventForm, celebForm=celebForm, logged_in=logged_in, user_name=user_name)
 
-def get_events():
-    # will grab event data from db and create Event class objects for each event
-    # Event(date, title)
-    # event_list = []
-    # grab julian date and event name from db for each event tied to user
-    # add to list
-    # sort list and return
-    global my_events
-    my_events.sort()
-    return my_events
+
+@app.route('/update_event/<int:event_id>', methods=["GET", "POST"])
+def update_event(event_id):
+    logged_in = False
+    user_name = ""
+    if current_user.is_authenticated:
+        logged_in = True  # Update this based on user authentication status
+        user_name = current_user.username
+    event = EventModel.query.get(event_id)
+    eventForm = ReminderEventForm(obj=event)
+
+    if eventForm.validate_on_submit():
+        # Update event details from the form
+        event.event_title = request.form['title']
+        event.event_date = convert_date_to_julian(request.form['date'])
+        db.session.commit()
+        return redirect(url_for('reminders'))
+
+    return render_template('update_event.html',  event=event, eventForm=eventForm, logged_in=logged_in, user_name=user_name)
+
+@app.route('/delete_event/<int:event_id>', methods=["GET", "POST"])
+def delete_event(event_id):
+    event = EventModel.query.get(event_id)
+    db.session.delete(event)
+    db.session.commit()
+    return redirect(url_for('reminders'))
+
+
+# def get_events():
+#     # will grab event data from db and create Event class objects for each event
+#     # Event(date, title)
+#     # event_list = []
+#     # grab julian date and event name from db for each event tied to user
+#     # add to list
+#     # sort list and return
+#     global my_events
+#     my_events.sort()
+#     return my_events
 
 def convert_date_to_julian(date_string):
     date_format = "%Y-%m-%d"
@@ -173,13 +214,33 @@ def convert_date_from_julian(julian_date):
         date_str = f"{month} / {day}"
         return date_str
 
+# @app.route('/reminders', methods=["GET", "POST"])
+# def reminders():
+#     # global my_events
+#     events = db.session.query(EventModel).join(UserModel).filter(EventModel.user_owner==session.get('email')).all()
+#     for event in events:
+#         event.event_date = convert_date_from_julian(event.event_date)
+#     return render_template('reminders.html', events=events)
+
 @app.route('/reminders', methods=["GET", "POST"])
 def reminders():
-    # global my_events
-    events = db.session.query(EventModel).join(UserModel).filter(EventModel.user_owner==session.get('email')).all()
+    logged_in = False
+    user_name = ""
+    if current_user.is_authenticated:
+        logged_in = True  # Update this based on user authentication status
+        user_name = current_user.username
+    events = None
+    # Check if there are any reminders in the database. (Check edge case if user is not logged in and goes to this page. Does this cause an error?)
+    # events = EventModel.query.all()
+    if current_user.is_authenticated:
+        events = EventModel.query.filter_by(user_owner=current_user.email)
+
+    # Format dates to be displayed properly in table
     for event in events:
         event.event_date = convert_date_from_julian(event.event_date)
-    return render_template('reminders.html', events=events)
+
+    # return render_template('reminders.html', events=get_events())
+    return render_template('reminders.html', events=events, logged_in=logged_in, user_name=user_name)
 
 
 def get_celebrity_dob(celebrity_name):
@@ -212,15 +273,15 @@ def get_celebrity_dob(celebrity_name):
     # dob_datetime = datetime.strptime(dob_str, "%Y-%m-%d")
     return dob_str
 
-@app.route('/edit-event/<event_repr>', methods=["GET", "POST"])
-def edit_event(event_repr):
-    eventEditForm = EventEditForm()
-    event = EventModel.query.filter_by(event_id=event_repr).first()
-    event_title = event.event_title
-    event_display_date = convert_date_from_julian(event.event_date)
-    # event = id
-    return render_template('edit_event.html', eventEditForm=eventEditForm, 
-                           event=event, event_title=event_title, event_display_date=event_display_date)
+# @app.route('/edit-event/<event_repr>', methods=["GET", "POST"])
+# def edit_event(event_repr):
+#     eventEditForm = EventEditForm()
+#     event = EventModel.query.filter_by(event_id=event_repr).first()
+#     event_title = event.event_title
+#     event_display_date = convert_date_from_julian(event.event_date)
+#     # event = id
+#     return render_template('edit_event.html', eventEditForm=eventEditForm, 
+#                            event=event, event_title=event_title, event_display_date=event_display_date)
 
 
 
