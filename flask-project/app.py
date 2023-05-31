@@ -148,7 +148,11 @@ def add_event():
         # call api
         event = EventModel()
         event.event_title = request.form['title']
-        event.event_date = convert_date_to_julian(get_celebrity_dob(event.event_title))  # need to figure out how to handle errors
+        celeb_bday = get_celebrity_dob(event.event_title)
+        if celeb_bday is None:
+            flash('The birthday of the name you entered is not available.')
+            return redirect(url_for('add_event'))
+        event.event_date = convert_date_to_julian(celeb_bday)
         event.user_owner = session.get('email')
         db.session.add(event)
         db.session.commit()
@@ -258,14 +262,18 @@ def get_celebrity_dob(celebrity_name):
     # Parameters for the API request
     params = {'name': celebrity_name.lower().replace(' ', '_')}
     headers = {'X-Api-Key': '4enulfTgfsbrl/wW7JiaoQ==jLNpv26JHetz3tHp'}
-    # Make the API request
-    response = requests.get(api_url, headers=headers, params=params)
-    # Raise an exception if the request was unsuccessful
-    response.raise_for_status()
-    # Parse the response JSON
-    data = response.json()
+    try:
+        # Make the API request
+        response = requests.get(api_url, headers=headers, params=params)
+        # Raise an exception if the request was unsuccessful
+        response.raise_for_status()
+        # Parse the response JSON
+        data = response.json()
+    except requests.exceptions.HTTPError as e:
+        flash('A connection error occurred.')
+    except Exception as e:
+        flash('An error occurred.')
     if not data:
-        print(f"{celebrity_name}'s birthday is not available.")  # Use flash in add_reminders instead.
         return None
     # Extract and parse the date of birth
     # dob_str = str(data[0]['birthday'])
