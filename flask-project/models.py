@@ -1,13 +1,11 @@
 from flask_login import UserMixin, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timedelta
 
 db = SQLAlchemy()
 loginManager=LoginManager()
 
-
-
-##CREATE TABLE
 class UserModel(UserMixin, db.Model):
     id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -22,7 +20,7 @@ class UserModel(UserMixin, db.Model):
         return check_password_hash(self.passwordHash, password)
     
     def __repr__(self):
-        return f'<User "{self.username}"'
+        return f'user_id_{self.id}'
     
 class EventModel(UserMixin, db.Model):
     event_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
@@ -31,9 +29,10 @@ class EventModel(UserMixin, db.Model):
     # user_owner = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     user_owner = db.Column(db.String(50), db.ForeignKey('user_model.email'), nullable=False)
 
-
+    # Important! Don't change this repr as it is used by the edit_event function
+    # in app.py to create the urls for each event entry to be edited.
     def __repr__(self):
-        return f'<Event "{self.event_title}"'
+        return f'{self.event_id}'
 
 @loginManager.user_loader
 def loadUser(id):

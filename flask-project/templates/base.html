@@ -15,49 +15,50 @@
 </head>
 <body>
   <header>
-    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+    <nav class="navbar navbar-expand-sm navbar-light bg-info bg-opacity-50">
           <div class="container">
-            <a class="navbar-brand" href="{{url_for('home')}}">
-              <img src="https://th.bing.com/th/id/OIG.y6gdvKPCX4jaymCeP2Jj?pid=ImgGn" alt="logo" height="50" width="50"/>
+            <a class="navbar-brand text-secondary" href="{{url_for('home')}}">
+              <img src="https://i.imgur.com/MUcfdNO.png" alt="Birthday Reminder" class="img-thumbnail " style="max-width: 250px; background-color: transparent; border: 0;">
             </a>
-            <a class="navbar-brand" href="{{url_for('home')}}"><h3>Birthday Reminder</h3></a>
             <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId"
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>  
 
-            <div class="collapse navbar-collapse" id="collapsibleNavId"> 
+            <div class="collapse navbar-collapse fw-bold text-dark" id="collapsibleNavId"> 
               <ul class="navbar-nav ms-auto">
-                  <ul class="navbar-nav me-auto mt-2 mt-lg-0">
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{url_for('home')}}">Home</a>
-                    </li>
+                <ul class="navbar-nav me-auto mt-2 mt-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('reminders')}}">My Reminders</a>
+                    <a class="nav-link" href="{{url_for('home')}}" style="color: #212529;">Home</a>
                   </li>
+                  {% if logged_in %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('register')}}">Register</a>
+                    <a class="nav-link" href="{{url_for('reminders')}}" style="color: #212529;">My Reminders</a>
                   </li>
-                  <li class="nav-item">
-                    {% if logged_in %}
-                      <a class="nav-link" href="{{url_for('logout')}}">Log Out</a>
-                    {% endif %}
-                  </li>
-
+                  {% endif %}
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                  <i class="bi bi-person-circle"></i>
                   <li class="nav-item">
                     {% if logged_in %}
-                    <a class="nav-link"> <i class="fa fa-user-circle-o"></i> {{ user_name }}</a>
+                      <a class="nav-link" href="{{url_for('logout')}}" style="color: #212529;">Log Out</a>
+                    {% endif %}
+                  </li>
+                  <i class="bi bi-person-circle" style="color: #212529;"></i>
+                  <li class="nav-item">
+                    {% if logged_in %}
+                    <a class="nav-link"> <i class="fa fa-user-circle-o" style="color: #212529;"></i> {{ user_name }}</a>
                       
                     {% else %}
-                       <a class="nav-link"  class="nav-link" href="{{url_for('login')}}">Log In</a>
+                       <a class="nav-link" href="{{url_for('login')}}" style="color: #212529;">Log In</a>
                     {% endif %} 
                   </li>
+                  {% if not logged_in %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('register')}}" style="color: #212529;">Sign Up</a>
+                  </li>
+                  {% endif %}
                 </ul>
-       
-  
+              </ul>
             </div>
       </div>
     </nav>
@@ -78,6 +79,43 @@
       </ul>
     {% endif %}
   {% endwith %}
+  <div class="container-fluid bg-info bg-opacity-50 text-white p-5">
+    <div class="row align-items-center">
+        <div class="col-3">
+          <a class="navbar-brand text-secondary" href="{{url_for('home')}}">
+            <img src="https://i.imgur.com/MUcfdNO.png" alt="Birthday Reminder" class="img-thumbnail " style="max-width: 200px; background-color: transparent; border: 0;">
+          </a>
+        </div>
+        <div class="col-3 align-items-center text-dark">
+            <h6><a href="/" style="font-weight:600; color: #212529; text-decoration: none;">Home</a></h6>
+            {% if logged_in %}
+            <h6></h6><a href="/reminders" style="font-weight:600; color: #212529; text-decoration: none;">My Reminders</a></h6>
+            {% endif %}
+            {% if not logged_in %}
+            <h6></h6><a href="/register" style="font-weight:600; color: #212529; text-decoration: none;">Sign Up</a></h6>
+            {% endif %}
+            {% if not logged_in %}
+            <h6></h6><a href="/login" style="font-weight:600; color: #212529; text-decoration: none;">Log In</a></h6>
+            {% endif %}
+            {% if logged_in %}
+            <h6></h6><a href="/logout" style="font-weight:600; color: #212529; text-decoration: none;">Log Out</a></h6>
+            {% endif %}
+        </div>
+        <div class="col-6 align-items-center text-dark">
+          <h6 style="font-weight:600;">Created by Team STAX</h6>
+          <div class="row align-items-center">
+            <div class="col-3 align-items-center">
+            <img src="https://i.imgur.com/2htv7Zi.png" alt="STAX logo" class="img-thumbnail" style="max-width: 100px; background-color: transparent; border: 0;">
+            </div>
+            <div class="col-3">
+              <h6>Sheehan Smith</h6>
+              <h6>Tom Swanson</h6>
+              <h6>Andrew Froberg</h6>
+              <h6>Xiying Long</h6>
+            </div>
+          </div>
+    </div>
+  </div>
   </footer>
   <!-- Bootstrap JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"

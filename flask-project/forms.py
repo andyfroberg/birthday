@@ -18,3 +18,9 @@ class ReminderEventForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
     date = DateField('date', format= '%Y-%m-%d', validators=[DataRequired()])
 
+class CelebrityEventForm(FlaskForm):
+    title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
+
+class EventEditForm(FlaskForm):
+    title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
+    date = DateField('date', format= '%Y-%m-%d', validators=[DataRequired()])
