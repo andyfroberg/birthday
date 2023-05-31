@@ -1,34 +1,33 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock title %}
 {% block content %}
- 
- <section id="hero" class="hero d-flex align-items-center section-bg">
-          <div class="container">
-            <div class="row justify-content-between gy-5">
-              <div class="col-lg-5 order-2 order-lg-1 d-flex flex-column justify-content-center align-items-center align-items-lg-start text-center text-lg-start">
-                <h2 data-aos="fade-up">Never forget the special occasions in your life<br>like birthdays, anniversaries, and holidays.</h2>
-                <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
-                  <a class="link" a href="{{url_for('register')}}"><i class="bi bi-play-circle"></i><span>JOIN NOW</span></a>
-                </div>
-              </div>
-              <div class="col-lg-5 order-1 order-lg-2 text-center text-lg-start">
-                <img src="https://th.bing.com/th/id/OIG.jIRdJjwiMhqSxbTYat2P?pid=ImgGn." class="img-fluid" alt="" data-aos="zoom-out" data-aos-delay="300">
-              </div>
-              
-            </div>
-          </div>
-        </section>
-  </header>
-
-  </main>
-  <footer>
-    <!-- place footer here -->
-    <div class="container">
-      <div class="credits">
-        Designed by <a>STAX.</a>
-      </div>
-    </div>
-  </footer>
+ <style>
+  .hero-container {
+    height: 70vh;
+    background-image: url('https://i.imgur.com/Nq5safg.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .hero-sign-up-button {
+    font-size: 1.5em;
+    font-weight: 700;
+    border: none;
+  }
+ </style>
+<div class="hero-container container-fluid m-0 p-0">
+  <div class="col-1"></div>
+  <div class="col-10 p-5 container-fluid">
+    <h1 class="align-items-center fw-bold mt-5 mb-3">Never forget the special occasions in your life.</h1>
+    <h2 class="align-items-center fst-italic">Birthdays</h2>
+    <i class="bi bi-gift"></i>
+    <h2 class="align-items-center fst-italic">Anniversaries</h2>
+    <h2 class="align-items-center fst-italic">Holidays</h2>
+    <h2 class="align-items-center fst-italic">And More!</h2>
+    <a name="sign-up" id="" class="btn btn-primary hero-sign-up-button bg-info mt-4" href="{{ url_for('register') }}" role="button">Sign Up</a>
+  </div>
+  <div class="col-1"></div>
+</div>
 
   {% endblock content %}
 
