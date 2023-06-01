@@ -226,8 +226,8 @@ def convert_date_from_julian(julian_date):
 #         event.event_date = convert_date_from_julian(event.event_date)
 #     return render_template('reminders.html', events=events)
 
-@app.route('/reminders', methods=["GET", "POST"])
-def reminders():
+@app.route('/reminders/<int:order_by_date>', methods=["GET", "POST"])
+def reminders(order_by_date=0):
     eventFilterForm = EventFilterForm()
     logged_in = False
     user_name = ""
@@ -239,10 +239,13 @@ def reminders():
     # events = EventModel.query.all()
     if current_user.is_authenticated:
         events = EventModel.query.filter_by(user_owner=current_user.email)
+        if order_by_date:
+            events = EventModel.query.filter_by(user_owner=current_user.email).order_by(EventModel.event_date)
 
     # Format dates to be displayed properly in table
     for event in events:
         event.event_date = convert_date_from_julian(event.event_date)
+
 
     # Check if the user has searched for an event by title
     if eventFilterForm.validate_on_submit():
