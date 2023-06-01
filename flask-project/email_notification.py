@@ -52,7 +52,7 @@ def send_email(user_email, message_content):
     # establish connection to the mail server
     server = smtplib.SMTP('smtp.gmail.com', 587)  # Google SMTP server details
     server.starttls()
-    server.login('WeeklyBirthdayEmail@gmail.com', 'TeamSTAX2023!')  # temporary Team STAX gmail and password
+    server.login('WeeklyBirthdayReminder@gmail.com', 'TeamSTAX2023!')  # temporary Team STAX gmail and password
 
     server.send_message(msg)
     server.quit()
