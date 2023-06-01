@@ -3,9 +3,8 @@
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from forms import LoginForm, ReminderEventForm, RegisterForm, CelebrityEventForm, EventEditForm, EventFilterForm
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, current_user
 from models import db, loginManager, UserModel, EventModel
-# from event import Event
 from datetime import datetime
 import requests
 import json
@@ -27,8 +26,6 @@ with app.app_context():
 #initialize the login manager
 loginManager.init_app(app)
 
-# #testing event list
-# my_events = []
 
 def addUser(email, username, password):
     user = UserModel()
@@ -44,16 +41,6 @@ def authHandler():
     form=LoginForm()
     flash('Please login to access this page')
     return render_template('login.html',form=form)
-
-# # some setup code because we don't have a registration page or database
-# @app.before_first_request
-# def create_table():
-#     db.create_all()
-#     user = UserModel.query.filter_by(email = 'xil1314@uw.edu' ).first()
-#     if user is None:
-#         addUser("xil1314@uw.edu","506506")
-#     else:
-#         logout_user()
 
 
 @app.route('/')
@@ -83,8 +70,7 @@ def login():
             return render_template('login.html',form=form)
         login_user(user)
         session['email'] = form.email.data
-        # print(str(session.get('email')))
-        return redirect(url_for('reminders'))
+        return redirect(url_for('reminders', order_by_date=0))
     return render_template("login.html", form=form)
 
 
@@ -117,7 +103,7 @@ def register():
                 session['email'] = form.email.data
                 user = UserModel.query.filter_by(email=form.email.data).first()
                 login_user(user)
-                return redirect(url_for('reminders'))  # may need to go back to 'login' if still buggy
+                return redirect(url_for('reminders', order_by_date=0))  # may need to go back to 'login' if still buggy
             else:
                 flash('Passwords do not match')
                 return render_template('register.html',form=form)
@@ -125,6 +111,7 @@ def register():
             flash('Email already registered')
             return render_template('register.html',form=form)    
     return render_template('register.html',form=form, logged_in=logged_in, user_name=user_name)
+
 
 @app.route('/add_event', methods=["GET", "POST"])
 def add_event():
@@ -143,7 +130,7 @@ def add_event():
         event.user_owner = session.get('email')  # Might be wrong (would this be easier if we had user_id in db instead of email being primary key?)
         db.session.add(event)
         db.session.commit()
-        return redirect(url_for('reminders')) 
+        return redirect(url_for('reminders', order_by_date=0)) 
     if celebForm.validate_on_submit():
         # call api
         event = EventModel()
@@ -156,8 +143,7 @@ def add_event():
         event.user_owner = session.get('email')
         db.session.add(event)
         db.session.commit()
-        return redirect(url_for('reminders'))
-        # if birthday not found, flash an error
+        return redirect(url_for('reminders', order_by_date=0))
 
     return render_template('add_event.html', eventForm=eventForm, celebForm=celebForm, logged_in=logged_in, user_name=user_name)
 
@@ -177,54 +163,36 @@ def update_event(event_id):
         event.event_title = request.form['title']
         event.event_date = convert_date_to_julian(request.form['date'])
         db.session.commit()
-        return redirect(url_for('reminders'))
+        return redirect(url_for('reminders', order_by_date=0))
 
     return render_template('update_event.html',  event=event, eventForm=eventForm, logged_in=logged_in, user_name=user_name)
+
 
 @app.route('/delete_event/<int:event_id>', methods=["GET", "POST"])
 def delete_event(event_id):
     event = EventModel.query.get(event_id)
     db.session.delete(event)
     db.session.commit()
-    return redirect(url_for('reminders'))
+    return redirect(url_for('reminders', order_by_date=1))
 
-
-# def get_events():
-#     # will grab event data from db and create Event class objects for each event
-#     # Event(date, title)
-#     # event_list = []
-#     # grab julian date and event name from db for each event tied to user
-#     # add to list
-#     # sort list and return
-#     global my_events
-#     my_events.sort()
-#     return my_events
 
 def convert_date_to_julian(date_string):
     date_format = "%Y-%m-%d"
     date = datetime.strptime(date_string, date_format)
-    #other way is to use jdcal but couldn't get the import module working
     # the large number is the offset to equal the noon of the entered date
     julian_day = date.toordinal() + 1721425
     return julian_day
 
+
 def convert_date_from_julian(julian_date):
         date = datetime.fromordinal(julian_date - 1721425)
-        # date = datetime.fromordinal(int(julian_date) - 1721425)
         month = date.month
         day = date.day
         # if we want to include year
-        # year = date.year
-        date_str = f"{month} / {day}"
+        year = date.year
+        date_str = f"{month} / {day} / {year}"
         return date_str
 
-# @app.route('/reminders', methods=["GET", "POST"])
-# def reminders():
-#     # global my_events
-#     events = db.session.query(EventModel).join(UserModel).filter(EventModel.user_owner==session.get('email')).all()
-#     for event in events:
-#         event.event_date = convert_date_from_julian(event.event_date)
-#     return render_template('reminders.html', events=events)
 
 @app.route('/reminders/<int:order_by_date>', methods=["GET", "POST"])
 def reminders(order_by_date=0):
@@ -236,7 +204,6 @@ def reminders(order_by_date=0):
         user_name = current_user.username
     events = None
     # Check if there are any reminders in the database. (Check edge case if user is not logged in and goes to this page. Does this cause an error?)
-    # events = EventModel.query.all()
     if current_user.is_authenticated:
         events = EventModel.query.filter_by(user_owner=current_user.email)
         if order_by_date:
@@ -256,7 +223,6 @@ def reminders(order_by_date=0):
                 filtered_events.append(event)
         return render_template('reminders.html', eventFilterForm=eventFilterForm, events=filtered_events, logged_in=logged_in, user_name=user_name)
 
-    # return render_template('reminders.html', events=get_events())
     return render_template('reminders.html', eventFilterForm=eventFilterForm, events=events, logged_in=logged_in, user_name=user_name)
 
 
@@ -290,20 +256,18 @@ def get_celebrity_dob(celebrity_name):
         return None
     # Extract and parse the date of birth
     # dob_str = str(data[0]['birthday'])
-    dob_str = data[0]['birthday']
+    try:
+        dob_str = data[0]['birthday']
+        date_format = "%Y-%m-%d"
+        date_object = datetime.strptime(dob_str, date_format)
+        current_year = datetime.now().year
+        date_object = date_object.replace(year=current_year)
+        dob_str = date_object.strftime(date_format)
+    # if a celebrity does not have a birthday listed in the API
+    except KeyError:
+        return None
     # dob_datetime = datetime.strptime(dob_str, "%Y-%m-%d")
     return dob_str
-
-# @app.route('/edit-event/<event_repr>', methods=["GET", "POST"])
-# def edit_event(event_repr):
-#     eventEditForm = EventEditForm()
-#     event = EventModel.query.filter_by(event_id=event_repr).first()
-#     event_title = event.event_title
-#     event_display_date = convert_date_from_julian(event.event_date)
-#     # event = id
-#     return render_template('edit_event.html', eventEditForm=eventEditForm, 
-#                            event=event, event_title=event_title, event_display_date=event_display_date)
-
 
 
 # Run the application if this script is being run directly
