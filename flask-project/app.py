@@ -2,7 +2,7 @@
 # Import the necessary modules
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import LoginForm, ReminderEventForm, RegisterForm, CelebrityEventForm, EventEditForm
+from forms import LoginForm, ReminderEventForm, RegisterForm, CelebrityEventForm, EventEditForm, EventFilterForm
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, loginManager, UserModel, EventModel
 # from event import Event
@@ -228,6 +228,7 @@ def convert_date_from_julian(julian_date):
 
 @app.route('/reminders', methods=["GET", "POST"])
 def reminders():
+    eventFilterForm = EventFilterForm()
     logged_in = False
     user_name = ""
     if current_user.is_authenticated:
@@ -243,8 +244,17 @@ def reminders():
     for event in events:
         event.event_date = convert_date_from_julian(event.event_date)
 
+    # Check if the user has searched for an event by title
+    if eventFilterForm.validate_on_submit():
+        filtered_events = []
+        # events = EventModel.query.all()
+        for event in events:
+            if request.form['query'].lower() in str(event.event_title).lower():  # compare event title to only what the user has typed?
+                filtered_events.append(event)
+        return render_template('reminders.html', eventFilterForm=eventFilterForm, events=filtered_events, logged_in=logged_in, user_name=user_name)
+
     # return render_template('reminders.html', events=get_events())
-    return render_template('reminders.html', events=events, logged_in=logged_in, user_name=user_name)
+    return render_template('reminders.html', eventFilterForm=eventFilterForm, events=events, logged_in=logged_in, user_name=user_name)
 
 
 def get_celebrity_dob(celebrity_name):

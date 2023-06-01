@@ -1,18 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="card-body" align="center">
-        <p class="card-text"><h2>My Reminders</h2></p>
+<div class="card-body mt-5" align="center">
+  <p class="card-text"><h2>My Reminders</h2></p>
+</div>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-2 dropdown mb-3">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Add Reminder</a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{{url_for('add_event')}}">Add a Reminder!</a></li>
+        </ul>
     </div>
-    <div class="container">
-      <div class="row justify-content-start">
-    <div class="dropdown mb-3">
-          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            Add Reminder
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{url_for('add_event')}}">Add a Reminder!</a></li>
-          </ul>
+    <div class="col-4">
+      <form method="post">
+        <div class="row">
+          <div class="col">
+            {{ eventFilterForm.csrf_token }}
+            {{ eventFilterForm.query(class="form-control") }}
+          </div>
+          <div class="col">
+            <button type="submit" class="btn btn-secondary" >Search</button>
+          </div>
         </div>
+      </form>
+    </div>
+    <div class="col-2">
+      <button type="login" class="btn btn-secondary"><a href="" style="text-decoration: none; color: white;">Sort By Date <i class="fa fa-sort" aria-hidden="true"></i></a></button>
+    </div>
+  </div>
+</div>
+
+
+<div class="container">
+  <div class="row justify-content-start">
+    
+
+
     <div>
 
       <table class="table mb-4">

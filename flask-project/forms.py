@@ -24,3 +24,6 @@ class CelebrityEventForm(FlaskForm):
 class EventEditForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
     date = DateField('date', format= '%Y-%m-%d', validators=[DataRequired()])
+
+class EventFilterForm(FlaskForm):
+    query = StringField('query', validators=[Length(min=1, max=50)])
