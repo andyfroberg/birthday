@@ -2,7 +2,7 @@
 # Import the necessary modules
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import LoginForm, ReminderEventForm, RegisterForm, CelebrityEventForm, EventEditForm
+from forms import LoginForm, ReminderEventForm, RegisterForm, CelebrityEventForm, PasswordChangeForm, EventEditForm
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, loginManager, UserModel, EventModel
 # from event import Event
@@ -291,7 +291,21 @@ def get_celebrity_dob(celebrity_name):
 #     return render_template('edit_event.html', eventEditForm=eventEditForm, 
 #                            event=event, event_title=event_title, event_display_date=event_display_date)
 
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    passwordChangeForm = PasswordChangeForm()
+    if current_user.is_authenticated:
+        logged_in = True
+        user_name = current_user.username
+        user = UserModel.query.filter_by(username=user_name).first()
+    if passwordChangeForm.validate_on_submit() and logged_in:
+        new_password = request.form['newPassword']
+        user.setPassword(new_password)
+        db.session.commit()
+        return redirect(url_for('reminders'))
 
+    return render_template('change_password.html', passwordChangeForm=passwordChangeForm, logged_in=logged_in, user_name=user_name)
+        
 
 # Run the application if this script is being run directly
 if __name__ == '__main__':
