@@ -1,16 +1,44 @@
 # Birthday Reminder Web App
 ## **Quick Start Guide**
- ```
+ ```bash
  # Clone this repository
- $> git clone https://github.com/andyfroberg/birthday.git
+ $  git clone https://github.com/andyfroberg/birthday.git
 
 # Navigate to the main app directory 'birthday'
-$> cd birthday
+$  cd birthday
 
 # Create and start the containers
-$> docker-compose --profile production up -d --build
+$  docker-compose --profile production up -d --build
  ```
-
+## **Project File Structure**
+```
+birthday
+│   README.md
+│   docker-compose.yml  
+│
+└───flask-project
+│   │   Dockerfile
+│   │   app.py
+│   │   email_notifications.py
+│   │   forms.py
+│   │   models.py
+│   │   requirements.txt
+│   │
+│   └───templates
+│       │   add_event.html
+│       │   base.html
+│       │   change_password.html
+│       │   edit_event.html
+│       │   home.html
+│       │   login.html
+│       │   register.html
+│       │   reminders.html
+│       │   update_event.html
+│   
+└───nginx
+    │   Dockerfile
+    │   nginx.conf
+```
 
 
 ## **TCSS 506**
