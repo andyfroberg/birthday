@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+
+"""
+This feature was not implemented in the final app due to 
+a recent change by Gmail. Users are no longer allowed to 
+run in "unsafe mode," and as a result, we were not able
+to get the necessary credentials working to implement
+the email notifications feature.
+"""
+
 import schedule
 # Need to ensure 'pip install schedule'. Not in standard library
 import time
@@ -11,7 +20,6 @@ from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from datetime import datetime, timedelta
 
 Base: DeclarativeMeta = declarative_base()
-
 
 class User(Base):
     __tablename__ = "users"
