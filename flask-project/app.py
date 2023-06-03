@@ -189,8 +189,8 @@ def convert_date_from_julian(julian_date):
         month = date.month
         day = date.day
         # if we want to include year
-        year = date.year
-        date_str = f"{month} / {day} / {year}"
+        # year = date.year
+        date_str = f"{month} / {day}"
         return date_str
 
 
