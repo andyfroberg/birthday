@@ -1,8 +1,16 @@
 # Birthday Reminder Web App
 ## **Quick Start Guide**
- `docker pull adslkfjasdk`
- ### Navigate to directory
- `docker-compose --profile production up -d --build`
+ ```
+ # Clone this repository
+ $> git clone https://github.com/andyfroberg/birthday.git
+
+# Navigate to the main app directory 'birthday'
+$> cd birthday
+
+# Create and start the containers
+$> docker-compose --profile production up -d --build
+ ```
+
 
 
 ## **TCSS 506**
@@ -17,7 +25,7 @@ This project was created as the capstone for TCSS 506 at UW Tacoma as part of th
 
 
 ## **Team Responsibilities**
-### The entire team worked together on many of the features of the web app. This allowed us all to gain experience with various full-stack concepts. The entire team helped one another quite a bit on all the features listed below.
+#### The entire team worked together on many of the features of the web app. This allowed us all to gain experience with various full-stack concepts. The entire team helped one another quite a bit on all the features listed below.
 ### **Sheehan Smith**
 - Project management/team lead
 - Docker orchestration/devops
