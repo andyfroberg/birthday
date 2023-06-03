@@ -281,7 +281,7 @@ def change_password():
         new_password = request.form['newPassword']
         user.setPassword(new_password)
         db.session.commit()
-        return redirect(url_for('reminders'))
+        return redirect(url_for('reminders', order_by_date=0))
 
     return render_template('change_password.html', passwordChangeForm=passwordChangeForm, logged_in=logged_in, user_name=user_name)
         
