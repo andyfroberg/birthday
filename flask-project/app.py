@@ -39,7 +39,7 @@ def addUser(email, username, password):
 @loginManager.unauthorized_handler
 def authHandler():
     form=LoginForm()
-    flash('Please login to access this page')
+    flash('Please login to access this page', 'alert-danger')
     return render_template('login.html',form=form)
 
 
@@ -59,14 +59,14 @@ def login():
     form = LoginForm()
     if request.method == 'POST':
         if not form.validate_on_submit():
-            flash('Please enter a valid email and password')
+            flash('Please enter a valid email and password', 'alert-danger')
             return render_template('login.html',form=form)
         user = UserModel.query.filter_by(email=form.email.data).first()
         if user is None:
-            flash('Please enter a valid email')
+            flash('Please enter a valid email', 'alert-danger')
             return render_template('login.html',form=form)
         if not user.checkPassword(form.password.data):
-            flash('Please enter a valid password')
+            flash('Please enter a valid password', 'alert-danger')
             return render_template('login.html',form=form)
         login_user(user)
         session['email'] = form.email.data
@@ -91,24 +91,24 @@ def register():
     if request.method == 'POST':
         if not form.validate_on_submit():
             if form.password.data != form.confirmPassword.data:
-                flash('Passwords do not match')
+                flash('Passwords do not match', 'alert-danger')
             else:
-                flash('Something went wrong in registration')
+                flash('Something went wrong in registration', 'alert-danger')
             return render_template('register.html',form=form)
         user = UserModel.query.filter_by(email=form.email.data).first()
         if user is None:
             if form.password.data == form.confirmPassword.data:
                 addUser(form.email.data, form.username.data, form.password.data)  # Need username validation?
-                flash('Registration successful')
+                flash('Registration successful', 'alert-success')
                 session['email'] = form.email.data
                 user = UserModel.query.filter_by(email=form.email.data).first()
                 login_user(user)
                 return redirect(url_for('reminders', order_by_date=0))  # may need to go back to 'login' if still buggy
             else:
-                flash('Passwords do not match')
+                flash('Passwords do not match', 'alert-danger')
                 return render_template('register.html',form=form)
         else:
-            flash('Email already registered')
+            flash('Email already registered', 'alert-danger')
             return render_template('register.html',form=form)    
     return render_template('register.html',form=form, logged_in=logged_in, user_name=user_name)
 
@@ -137,7 +137,7 @@ def add_event():
         event.event_title = request.form['title']
         celeb_bday = get_celebrity_dob(event.event_title)
         if celeb_bday is None:
-            flash('The birthday of the name you entered is not available.')
+            flash('The birthday of the name you entered is not available.', 'alert-danger')
             return redirect(url_for('add_event'))
         event.event_date = convert_date_to_julian(celeb_bday)
         event.user_owner = session.get('email')
@@ -249,9 +249,9 @@ def get_celebrity_dob(celebrity_name):
         # Parse the response JSON
         data = response.json()
     except requests.exceptions.HTTPError as e:
-        flash('A connection error occurred.')
+        flash('A connection error occurred.', 'alert-danger')
     except Exception as e:
-        flash('An error occurred.')
+        flash('An error occurred.', 'alert-danger')
     if not data:
         return None
     # Extract and parse the date of birth
