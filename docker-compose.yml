@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   web:
-    image: stax/nginx:test
+    image: andyfroberg/birthday-web:final
     build: ./nginx
     restart: always
     ports:
@@ -10,7 +10,7 @@ services:
       - app
     profiles: ['production']
   app:
-    image: stax/birthday:compose
+    image: andyfroberg/birthday-app:final
     build: ./flask-project
     restart: always
     ports:
@@ -18,7 +18,7 @@ services:
     command: gunicorn -b 0.0.0.0:8000 app:app
     profiles: ['production', 'testing']
   app-debug:
-    image: stax/birthday:test
+    image: andyfroberg/birthday-test:final
     build: ./flask-project
     restart: always
     volumes: 

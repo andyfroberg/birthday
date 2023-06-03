@@ -1,8 +1,44 @@
 # Birthday Reminder Web App
 ## **Quick Start Guide**
- `docker pull adslkfjasdk`
- ### Navigate to directory
- `docker-compose --profile production up -d --build`
+ ```bash
+ # Clone this repository
+ $  git clone https://github.com/andyfroberg/birthday.git
+
+# Navigate to the main app directory 'birthday'
+$  cd birthday
+
+# Create and start the containers
+$  docker-compose --profile production up -d --build
+ ```
+## **Project File Structure**
+```
+birthday
+│   README.md
+│   docker-compose.yml  
+│
+└───flask-project
+│   │   Dockerfile
+│   │   app.py
+│   │   email_notifications.py
+│   │   forms.py
+│   │   models.py
+│   │   requirements.txt
+│   │
+│   └───templates
+│       │   add_event.html
+│       │   base.html
+│       │   change_password.html
+│       │   edit_event.html
+│       │   home.html
+│       │   login.html
+│       │   register.html
+│       │   reminders.html
+│       │   update_event.html
+│   
+└───nginx
+    │   Dockerfile
+    │   nginx.conf
+```
 
 
 ## **TCSS 506**
@@ -17,7 +53,7 @@ This project was created as the capstone for TCSS 506 at UW Tacoma as part of th
 
 
 ## **Team Responsibilities**
-### The entire team worked together on many of the features of the web app. This allowed us all to gain experience with various full-stack concepts. The entire team helped one another quite a bit on all the features listed below.
+#### The entire team worked together on many of the features of the web app. This allowed us all to gain experience with various full-stack concepts. The entire team helped one another quite a bit on all the features listed below.
 ### **Sheehan Smith**
 - Project management/team lead
 - Docker orchestration/devops
