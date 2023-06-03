@@ -18,13 +18,22 @@ class ReminderEventForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
     date = DateField('date', format= '%Y-%m-%d', validators=[DataRequired()])
 
+    
 class CelebrityEventForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
 
+    
 class EventEditForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(min=1, max=50)])
     date = DateField('date', format= '%Y-%m-%d', validators=[DataRequired()])
 
+    
+class EventFilterForm(FlaskForm):
+    query = StringField('query', validators=[Length(min=1, max=50)])
+
+    
 class PasswordChangeForm(FlaskForm):
     newPassword = PasswordField('newPassword', validators=[DataRequired(), Length(min=5, max=50)])
     confirmNewPassword = PasswordField('confirmNewPassword', validators=[DataRequired(), EqualTo('newPassword'), Length(min=5, max=50)])
+
+    
