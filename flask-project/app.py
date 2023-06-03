@@ -268,7 +268,9 @@ def get_celebrity_dob(celebrity_name):
         return None
     # dob_datetime = datetime.strptime(dob_str, "%Y-%m-%d")
     return dob_str
-
+    
+    
+@app.route('/change_password', methods=["GET", "POST"])
 def change_password():
     passwordChangeForm = PasswordChangeForm()
     if current_user.is_authenticated:
