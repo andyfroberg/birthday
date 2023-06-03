@@ -206,8 +206,9 @@ def reminders(order_by_date=0):
     # Check if there are any reminders in the database. (Check edge case if user is not logged in and goes to this page. Does this cause an error?)
     if current_user.is_authenticated:
         events = EventModel.query.filter_by(user_owner=current_user.email)
-        if order_by_date:
-            events = EventModel.query.filter_by(user_owner=current_user.email).order_by(EventModel.event_date)
+        if order_by_date:  # Remove this block if we take out the sorting feature
+            # events = EventModel.query.filter_by(user_owner=current_user.email).order_by(EventModel.event_date)
+            pass
 
     # Format dates to be displayed properly in table
     for event in events:
