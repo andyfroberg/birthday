@@ -44,10 +44,10 @@ birthday
 ## **TCSS 506**
 This project was created as the capstone for TCSS 506 at UW Tacoma as part of the Graduate Certificate in Software Development Engineering in 2022-23.
 ## **Team STAX**
-### Sheehan Smith
-### Tom Swanson
-### Andrew Froberg
-### Xiying Long
+#### Sheehan Smith
+#### Tom Swanson
+#### Andrew Froberg
+#### Xiying Long
 
 
 
